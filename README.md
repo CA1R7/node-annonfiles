@@ -18,7 +18,7 @@ const { upload, getInfo, download } = require("node-annonfiles");
 (async () => {
   try {
     // If you have not keyAcess let it empty
-    const uploadFile = await upload("./package.json", { token: "PUT_KEYACCESS" });
+    const uploadFile = await upload("./file.txt", { token: "PUT_KEYACCESS" });
     console.log(uploadFile); // you will get same result on the top
     // functions download,getInfo = (id: string) => result json
   } catch (e) {
