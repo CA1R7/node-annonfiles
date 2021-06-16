@@ -1,0 +1,33 @@
+{
+  "name": "node-annonfiles",
+  "version": "1.0.1",
+  "description": "Annonfiles api (unofficial) for uploading files",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "eslint src --ext .js,.json",
+    "lint:fix": "yarn lint --fix"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": "git://github.com/CA1R7/node-annonfiles.git",
+  "keywords": [
+    "annonfiles",
+    "files",
+    "upload",
+    "download"
+  ],
+  "author": "cair71 & redoan",
+  "license": "Apache-2.0",
+  "bin": "node-annonfiles",
+  "dependencies": {
+    "babel-eslint": "^10.1.0",
+    "cheerio": "^1.0.0-rc.9",
+    "eslint": "^7.27.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "htmlparser2": "^6.1.0",
+    "prettier": "^2.3.0",
+    "request": "^2.88.2"
+  }
+}
