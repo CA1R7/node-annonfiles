@@ -34,7 +34,7 @@ const { upload, getInfo, download } = require("node-annonfiles");
 node-annonfiles --upload file.txt
 ```
 
-with keyaccess original of Annonfiles website
+with keyaccess original of <a href="https://anonfiles.com/docs/api">Annonfiles website</a>
 
 ```
 node-annonfiles --upload file.txt@{keyaccess}
