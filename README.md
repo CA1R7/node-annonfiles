@@ -1,5 +1,5 @@
 # node-annonfiles
-(NOT_CLEAN_YET) Annonfiles unofficial API for uploading and downloading files.
+Annonfiles unofficial API for uploading and downloading files.
 
 # Installation
 
