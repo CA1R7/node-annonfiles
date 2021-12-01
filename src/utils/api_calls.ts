@@ -100,7 +100,7 @@ export class AnnonFilesAPIHandler {
     if (!id) throw new Error("Id not found (required)");
     return new Promise((resolve, reject) => {
       // using proxy for passing cloudflare protector.
-      let requestEdited =
+      const requestEdited =
         options && options.proxy
           ? request.defaults({
               proxy: `${options.protocol ?? "http"}://${options.proxy}`,
