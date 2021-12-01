@@ -1,5 +1,5 @@
 import { resolve } from "path";
-import { AnnonFilesAPIHandler, DownloadOptions, ResponseType, ProtocolsProxies } from "./api_calls";
+import { AnnonFilesAPIHandler, ResponseType, ProtocolsProxies } from "./api_calls";
 
 export const cli_handler = (args: string[], { download, upload, getInfo }: AnnonFilesAPIHandler) => {
   try {
@@ -21,11 +21,11 @@ export const cli_handler = (args: string[], { download, upload, getInfo }: Annon
           break;
         case "-v":
         case "--version":
-          const { version } = require("../../package.json");
+          const version: string = require("../../package.json").version; // eslint-disable-line
           console.log(`v${version}`);
           break;
         case "-u":
-        case "--upload":
+        case "--upload": {
           const target: string = args[started + 1];
 
           let file: string | null = null;
@@ -50,10 +50,11 @@ export const cli_handler = (args: string[], { download, upload, getInfo }: Annon
             notifyByConsole(file_uploaded);
           }
           break;
+        }
         case "-i":
         case "--info":
         case "-d":
-        case "--download":
+        case "--download": {
           let id = args[started + 1],
             proxy: string | undefined,
             protocol: ProtocolsProxies | null = null;
@@ -63,11 +64,11 @@ export const cli_handler = (args: string[], { download, upload, getInfo }: Annon
           }
           // get proxy e.g. XXXXX@00.00.00.00
           if (id.match(/@/)) {
-            let [pid, iproxy] = id.split(/@/g);
+            const [pid, iproxy] = id.split(/@/g);
             id = pid;
-            if (iproxy.match(/\:\/\//g)) {
-              protocol = iproxy.split(/\:\/\//g)[0] as ProtocolsProxies;
-              proxy = iproxy.replace(/(\w+)+\:\/\/|\/(.*)+$/g, "").trim();
+            if (iproxy.match(/:\/\//g)) {
+              protocol = iproxy.split(/:\/\//g)[0] as ProtocolsProxies;
+              proxy = iproxy.replace(/(\w+)+:\/\/|\/(.*)+$/g, "").trim();
             } else {
               proxy = iproxy;
             }
@@ -84,6 +85,7 @@ export const cli_handler = (args: string[], { download, upload, getInfo }: Annon
             notifyByConsole(await getInfo(id));
           }
           break;
+        }
       }
     };
     for (let i = 0; i < args.length; i++) {
