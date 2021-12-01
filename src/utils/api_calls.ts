@@ -3,7 +3,7 @@ import { parseDocument } from "htmlparser2";
 import * as request from "request";
 import cheerio from "cheerio";
 
-export interface AnnonResponseType {
+export interface ResponseType {
   status: boolean;
   data?: {
     file: {
@@ -23,16 +23,22 @@ export interface AnnonResponseType {
   };
 }
 
-export interface OptionsAnnonFiles {
-  file: string;
-  key: string | null;
+export interface UploadOptions {
+  key?: string | null;
 }
 
-const check = <P>(target: string, object: P): boolean => {
+export type ProtocolsProxies = "http" | "https" | "socks4" | "socks5";
+
+export interface DownloadOptions {
+  proxy?: string | null;
+  protocol?: ProtocolsProxies | null;
+}
+
+const check = <P>(target: keyof P, object: P): boolean => {
   return !(target in object);
 };
 
-export class AnnonfilesAPIHandler {
+export class AnnonFilesAPIHandler {
   public endpoint: string;
   public client: string;
   constructor() {
@@ -44,14 +50,14 @@ export class AnnonfilesAPIHandler {
     this.download = this.download.bind(this);
   }
 
-  public upload(options: OptionsAnnonFiles): PromiseLike<AnnonResponseType> {
+  public upload(file: string, options?: UploadOptions): PromiseLike<ResponseType> {
     return new Promise((resolve, reject) => {
-      if (check<OptionsAnnonFiles>("file", options) || !options.file) {
-        return reject("File property required on options");
+      if (!file) {
+        return reject("File is not provided");
       }
-      const file: string = options.file;
       // Query url of keyaccess
-      const keyQueryURL: string | null = !check<OptionsAnnonFiles>("key", options) ? `?token=${options.key}` : null;
+      const keyQueryURL: string | null =
+        options && !check<UploadOptions>("key", options) ? `?token=${options.key}` : null;
       if (!existsSync(file)) {
         // check the file if already exists.
         return reject("File not found");
@@ -73,7 +79,7 @@ export class AnnonfilesAPIHandler {
     });
   }
 
-  public getInfo(id: string): PromiseLike<AnnonResponseType> {
+  public getInfo(id: string): PromiseLike<ResponseType> {
     return new Promise((resolve, reject) => {
       request.get(`${this.endpoint}/v2/file/${id}/info`, (error, _response, body) => {
         if (error || !body) {
@@ -90,19 +96,33 @@ export class AnnonfilesAPIHandler {
     });
   }
 
-  public download(id: string): PromiseLike<string> {
+  public download(id: string, options?: DownloadOptions): PromiseLike<string> {
     if (!id) throw new Error("Id not found (required)");
     return new Promise((resolve, reject) => {
-      request.get(`${this.client}/${id}`, (error, _response, body) => {
+      // using proxy for passing cloudflare protector.
+      let requestEdited =
+        options && options.proxy
+          ? request.defaults({
+              proxy: `${options.protocol ?? "http"}://${options.proxy}`,
+            })
+          : request;
+      requestEdited.get(`${this.client}/${id}`, (error, _response, body) => {
         if (error || !body) {
           return reject(String(error ?? "Failed to request the content"));
         }
         try {
           const dom_content = parseDocument(body); // body must be a DOM content.
-          const DOMContentParsed = cheerio.load(dom_content);
-          const tempLink = DOMContentParsed("#download-url").attr("href"); // get direct "download_url"
-          if (!tempLink) return reject("An error occurred while parsing HTML");
-          else resolve(tempLink);
+          if (!dom_content) {
+            // check the content if fine.
+            throw new Error("An error occurred load the content");
+          }
+          const DOMContentParsed = cheerio.load(dom_content as unknown as string);
+          const tempLink = DOMContentParsed("#download-url").attr("href"); // get direct "download_url".
+          if (!tempLink) {
+            throw new Error("An error occurred while parsing HTML or maybe cloudflare rejected the request.");
+          } else {
+            resolve(tempLink);
+          }
         } catch (e) {
           return reject(String(e));
         }
