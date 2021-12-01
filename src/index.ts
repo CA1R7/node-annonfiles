@@ -1,12 +1,16 @@
 #!/usr/bin/env node
-import { AnnonfilesAPIHandler } from "./utils/api_calls";
-import { CLI_Handler } from "./utils/cli_handler";
+import { AnnonFilesAPIHandler } from "./utils/api_calls";
+import { cli_handler } from "./utils/cli_handler";
 
 // Annonfiles API Handler Calls
-const APIAnnon = new AnnonfilesAPIHandler();
+const annonfiles = new AnnonFilesAPIHandler();
 
 // CLI handler
-CLI_Handler(process.argv, APIAnnon);
+cli_handler(process.argv, annonfiles);
 
-// export it as default
-export default APIAnnon;
+// upload function (File)
+export const upload = annonfiles.upload;
+// download function (ID, options)
+export const download = annonfiles.download;
+// info function (ID)
+export const getInfo = annonfiles.getInfo;
