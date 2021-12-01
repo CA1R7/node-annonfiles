@@ -10,7 +10,8 @@
     "download"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "eslint src --ext .ts,.json"
   },
   "repository": "git://github.com/CA1R7/node-annonfiles.git",
   "bin": {
@@ -26,7 +27,13 @@
     "@types/cheerio": "^0.22.30",
     "@types/htmlparser2": "^3.10.3",
     "@types/node": "^16.11.11",
-    "@types/request": "^2.48.7"
+    "@types/request": "^2.48.7",
+    "@typescript-eslint/eslint-plugin": "^5.5.0",
+    "@typescript-eslint/parser": "^5.5.0",
+    "eslint": "^8.3.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.5.0"
   },
   "author": "cairbyte71",
   "license": "Apache-2.0"
