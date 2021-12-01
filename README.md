@@ -1,12 +1,19 @@
 # node-annonfiles
-Annonfiles unofficial API for uploading and downloading files.
+
+Annonfiles is unofficial API for uploading and downloading files.
 
 # Installation
 
-Install the package globally for use it anywhere easier
+if you are using `NPM` :
 
 ```
-npm install -g node-annonfiles
+npm install node-annonfiles
+```
+
+or `YARN` :
+
+```
+yarn add node-annonfiles
 ```
 
 # Usage
@@ -17,7 +24,7 @@ const { upload, getInfo, download } = require("node-annonfiles");
 (async () => {
   try {
     // If you have not keyAcess let it empty
-    const uploadFile = await upload("./file.txt", { token: "PUT_KEYACCESS" });
+    const uploadFile = await upload("./file.txt", { key: "PUT_KEYACCESS" });
     console.log(uploadFile); // you will get same result on the top
     // functions download,getInfo = (id: string) => result json
   } catch (e) {
@@ -34,7 +41,7 @@ const { upload, getInfo, download } = require("node-annonfiles");
 node-annonfiles --upload file.txt
 ```
 
-with keyaccess original of <a href="https://anonfiles.com/docs/api">Annonfiles website</a>
+with keyaccess original from <a href="https://anonfiles.com/docs/api">Annonfiles website</a>
 
 ```
 node-annonfiles --upload file.txt@{keyaccess}
@@ -71,8 +78,18 @@ Wait for uploading file.txt
 
 You should use ID of the file you already uploaded it, I used `D9KbB411u2` just for an example.
 
+NOTE: you should use proxy for passing cloudflare detector.
+
+Normal usage :
+
 ```
 node-annonfiles --download D9KbB411u2
+```
+
+With proxy usage :
+
+```
+node-annonfiles --download D9KbB411u2@proxy
 ```
 
 Output
